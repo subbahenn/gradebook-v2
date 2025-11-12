@@ -1,0 +1,123 @@
+:root {
+  --primary: #008866;
+  --primary-2: #004433;
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #666;
+  --tile-gray: #e6e6e6;
+  --tile-text: #111;
+  --gap: 16px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --text: #f2f2f2;
+    --muted: #aaa;
+    --tile-gray: #3a3a3a;
+    --tile-text: #f2f2f2;
+  }
+}
+
+html, body {
+  margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+#app {
+  display: flex; flex-direction: column; height: 100dvh;
+}
+
+.header {
+  display: grid; grid-template-columns: 1fr auto auto; align-items: center;
+  gap: var(--gap); padding: 12px var(--gap); border-bottom: 1px solid rgba(0, 0, 0, .08);
+}
+
+.header .title {
+  font-weight: 700; font-size: 1.2rem;
+}
+
+.header .controls {
+  display: flex; gap: 12px; align-items: center; flex-wrap: nowrap;
+}
+
+.header .right {
+  justify-self: end; color: var(--muted);
+}
+
+.button, button {
+  background: #eee; color: #111; border: none; border-radius: 10px; padding: 10px 14px; font-size: 16px;
+  touch-action: manipulation; min-height: 44px; cursor: pointer;
+}
+
+.button.primary {
+  background: var(--primary); color: white;
+}
+
+.segment {
+  display: inline-flex; border-radius: 10px; overflow: hidden; border: 1px solid rgba(0, 0, 0, .1);
+}
+
+.segment button {
+  background: transparent; padding: 10px 14px;
+}
+
+.segment button.active {
+  background: var(--primary); color: white; font-weight: 600;
+}
+
+.tabs {
+  display: flex; border-bottom: 1px solid rgba(0, 0, 0, .08);
+}
+
+.tabs button {
+  flex: 1; background: transparent; border-radius: 0;
+}
+
+.tabs button.active {
+  border-bottom: 3px solid var(--primary); font-weight: 600;
+}
+
+.content {
+  flex: 1; overflow: auto; padding: var(--gap);
+}
+
+.grid {
+  display: grid; gap: var(--gap);
+}
+
+.student-tile {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  min-width: 120px; min-height: 64px; border-radius: 12px; padding: 8px;
+  background: var(--tile-gray); color: var(--tile-text); font-weight: 600;
+  user-select: none; -webkit-tap-highlight-color: transparent;
+}
+
+.badge {
+  padding: 4px 8px; border-radius: 999px; background: var(--primary-2); color: #fff; font-weight: 600;
+}
+
+.dialog {
+  position: absolute; z-index: 10; background: var(--bg); border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 12px; padding: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+}
+
+.dialog .options {
+  display: grid; grid-template-columns: repeat(3, minmax(80px, 1fr)); gap: 12px;
+}
+
+.option {
+  padding: 16px; font-size: 18px; text-align: center; border-radius: 12px; border: 1px solid rgba(0, 0, 0, .1);
+}
+
+.option.primary {
+  background: var(--primary); color: #fff; border-color: transparent;
+}
+
+.seat-grid {
+  display: grid; background: transparent;
+}
+
+.seat-cell {
+  width: 120px; height: 70px; border-radius: 10px; border: 1px dashed rgba(0, 0, 0, .2);
+  display: flex; align-items: center; justify-content: center; background: #fafafa; color: #333;
+}
