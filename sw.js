@@ -1,5 +1,5 @@
 // sw.js
-const CACHE = 'noten-cache-v4'; // Version erhöhen!
+const CACHE = 'noten-cache-v5'; // Version erhöhen!
 const ASSETS = [
   './',
   'index.html',
