@@ -1,7 +1,7 @@
 
 const CACHE = 'noten-cache-v1';
 const ASSETS = [
-  '', 'index.html',
+  '.', 'index.html',
   'src/app.css','src/app.js',
   'src/ui/header.js','src/ui/tabs.js',
   'src/ui/grade-dialog.js','src/ui/student-tile.js',
