@@ -6,7 +6,6 @@ const DB_VERSION = 1;
 
 let db, cryptoKey, userSalt, verifier;
 
-// Kleine Hilfsfunktionen für IDB
 function idbReq(req) {
   return new Promise((resolve, reject) => {
     req.onsuccess = () => resolve(req.result);
@@ -52,7 +51,6 @@ export async function loadUser() {
   const tx = db.transaction('user', 'readonly');
   const store = tx.objectStore('user');
   const u = await idbReq(store.get('me'));
-  // tx kann hier auto-committen; wir warten nicht zwingend auf tx complete
   if (!u) return null;
   userSalt = new Uint8Array(u.salt);
   verifier = u.verifier;
@@ -67,39 +65,25 @@ export async function login(password) {
   return true;
 }
 
-// Verschlüsselte CRUD-Helfer
 async function storePut(storeName, record) {
   if (!cryptoKey) throw new Error('Kein Schlüssel abgeleitet (nicht eingeloggt)');
   const payload = await encryptJson(cryptoKey, record);
   const tx = db.transaction(storeName, 'readwrite');
-  const store = tx.objectStore(storeName);
-  await idbReq(store.put(payload));
+  await idbReq(tx.objectStore(storeName).put(payload));
   await idbTxComplete(tx);
 }
-
 async function storeGet(storeName, key) {
   if (!cryptoKey) throw new Error('Kein Schlüssel abgeleitet (nicht eingeloggt)');
   const tx = db.transaction(storeName, 'readonly');
-  const store = tx.objectStore(storeName);
-  const payload = await idbReq(store.get(key));
+  const payload = await idbReq(tx.objectStore(storeName).get(key));
   if (!payload) return null;
   return await decryptJson(cryptoKey, payload);
 }
-
 async function storeAll(storeName) {
   if (!cryptoKey) throw new Error('Kein Schlüssel abgeleitet (nicht eingeloggt)');
   const tx = db.transaction(storeName, 'readonly');
-  const store = tx.objectStore(storeName);
-  const payloads = await idbReq(store.getAll());
-  const results = [];
-  for (const p of payloads) {
-    results.push(await decryptJson(cryptoKey, p));
-  }
-  return results;
+  const payloads = await idbReq(tx.objectStore(storeName).getAll());
+  return Promise.all(payloads.map(p => decryptJson(cryptoKey, p)));
 }
 
-export const secure = {
-  put: storePut,
-  get: storeGet,
-  all: storeAll
-};
+export const secure = { put: storePut, get: storeGet, all: storeAll };
