@@ -11,9 +11,9 @@
 <body>
   <div id="app"></div>
   <script type="module">
-    import { initApp } from '/src/app.js';
+    import { initApp } from 'src/app.js';
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js');
+      navigator.serviceWorker.register('sw.js');
     }
     initApp(document.getElementById('app'));
   </script>
