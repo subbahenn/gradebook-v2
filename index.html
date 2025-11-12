@@ -7,11 +7,13 @@
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="stylesheet" href="src/app.css" />
   <meta name="theme-color" content="#008866" />
+  <link rel="icon" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
 </head>
 <body>
   <div id="app"></div>
   <script type="module">
-    import { initApp } from 'src/app.js';
+    import { initApp } from './src/app.js';
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
