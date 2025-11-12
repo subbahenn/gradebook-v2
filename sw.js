@@ -1,15 +1,15 @@
 
 const CACHE = 'noten-cache-v1';
 const ASSETS = [
-  '/', '/public/index.html',
-  '/src/app.css','/src/app.js',
-  '/src/ui/header.js','/src/ui/tabs.js',
-  '/src/ui/grade-dialog.js','/src/ui/student-tile.js',
-  '/src/ui/seatplan-view.js','/src/ui/seatplan-editor.js',
-  '/src/ui/admin.js','/src/ui/overview.js',
-  '/src/data/db.js','/src/data/crypto.js',
-  '/src/logic/grades.js','/src/logic/export.js',
-  '/manifest.webmanifest'
+  '/', 'index.html',
+  'src/app.css','src/app.js',
+  'src/ui/header.js','src/ui/tabs.js',
+  'src/ui/grade-dialog.js','src/ui/student-tile.js',
+  'src/ui/seatplan-view.js','src/ui/seatplan-editor.js',
+  'src/ui/admin.js','src/ui/overview.js',
+  'src/data/db.js','src/data/crypto.js',
+  'src/logic/grades.js','src/logic/export.js',
+  'manifest.webmanifest'
 ];
 
 self.addEventListener('install', e => {
