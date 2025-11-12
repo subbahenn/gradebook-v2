@@ -3,7 +3,8 @@ import { Header } from './ui/header.js';
 import { Tabs } from './ui/tabs.js';
 import { renderErfassen } from './ui/student-tile.js';
 import { renderOverview } from './ui/overview.js';
-import { renderSeatplanView, renderSeatplanEditor } from './ui/seatplan-view.js';
+import { renderSeatplanView } from './ui/seatplan-view.js';
+import { renderSeatplanEditor } from './ui/seatplan-editor.js';
 import { renderAdmin } from './ui/admin.js';
 
 export async function initApp(root) {
