@@ -38,14 +38,22 @@ export async function openDb() {
 }
 
 export async function initUser(username, password) {
+  // 1) Alles Kryptografische vor der IDB-Transaktion erledigen
+  userSalt = randomSalt();
+  const v = await passwordVerifier(password, userSalt); // deriveBits + Hash (kein exportKey)
+  const key = await deriveKey(password, userSalt);      // AES-GCM Key (nicht extrahierbar)
+
+  // 2) Transaktion öffnen und ohne weitere await-Zwischenschritte schreiben
   const tx = db.transaction('user', 'readwrite');
   const store = tx.objectStore('user');
-  userSalt = randomSalt();
-  verifier = await passwordVerifier(password, userSalt);
-  await idbReq(store.put({ id: 'me', username, salt: Array.from(userSalt), verifier }));
+  await idbReq(store.put({ id: 'me', username, salt: Array.from(userSalt), verifier: v }));
   await idbTxComplete(tx);
-  cryptoKey = await deriveKey(password, userSalt);
+
+  // 3) Lokalen Zustand setzen
+  verifier = v;
+  cryptoKey = key;
 }
+
 
 export async function loadUser() {
   const tx = db.transaction('user', 'readonly');
