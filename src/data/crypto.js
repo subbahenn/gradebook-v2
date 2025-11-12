@@ -1,8 +1,11 @@
+// src/data/crypto.js
+console.log('crypto.js geladen – Version 2025-11-12 v2'); // Sichtbarer Marker
+
 const enc = new TextEncoder();
 const dec = new TextDecoder();
 
+// Nicht-extrahierbarer AES-GCM-Schlüssel für Datenverschlüsselung
 export async function deriveKey(password, salt) {
-  // Nicht-extrahierbarer AES-GCM-Schlüssel für Datenverschlüsselung
   const keyMaterial = await crypto.subtle.importKey(
     'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveKey']
   );
@@ -35,7 +38,7 @@ export async function decryptJson(key, payload) {
 function b64(u8) { return btoa(String.fromCharCode(...u8)); }
 function fromB64(s) { return new Uint8Array(atob(s).split('').map(c => c.charCodeAt(0))); }
 
-// Verifier ohne exportKey: PBKDF2 -> deriveBits -> SHA-256 -> Base64
+// Korrekt: Verifier via PBKDF2 -> deriveBits -> SHA-256 -> Base64 (kein exportKey!)
 export async function passwordVerifier(password, salt) {
   const keyMaterial = await crypto.subtle.importKey(
     'raw', enc.encode(password), { name: 'PBKDF2' }, false, ['deriveBits']
@@ -43,7 +46,7 @@ export async function passwordVerifier(password, salt) {
   const bits = await crypto.subtle.deriveBits(
     { name: 'PBKDF2', hash: 'SHA-256', iterations: 250000, salt },
     keyMaterial,
-    256 // 256 Bits
+    256 // 256 Bit
   );
   const hash = await crypto.subtle.digest('SHA-256', bits);
   return b64(new Uint8Array(hash));
