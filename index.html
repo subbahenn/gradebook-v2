@@ -2,22 +2,271 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Mündliche Noten</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="src/app.css" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#008866" />
+  <title>Mündliche Noten – PWA (v2)</title>
+  <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="icons/icon-192.png" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div id="app"></div>
-  <script type="module">
-    import { initApp } from './src/app.js';
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js');
-    }
-    initApp(document.getElementById('app'));
-  </script>
+<body data-theme="light">
+  <!-- Login / Registrierung -->
+  <section id="view-auth" class="auth-view active">
+    <div class="auth-card">
+      <h3>Anmeldung</h3>
+      <form id="loginForm" class="auth-forms" autocomplete="on">
+        <label>Benutzername
+          <input type="text" id="loginUser" autocomplete="username" required />
+        </label>
+        <label>Passwort
+          <input type="password" id="loginPass" autocomplete="current-password" required />
+        </label>
+        <label class="inline">
+          <input type="checkbox" id="rememberUser" /> Benutzernamen merken
+        </label>
+        <button class="primary full" type="submit">Anmelden</button>
+      </form>
+
+      <div class="divider"><span>oder</span></div>
+
+      <h4>Registrieren</h4>
+      <form id="registerForm" class="auth-forms" autocomplete="on">
+        <label>Benutzername
+          <input type="text" id="regUser" autocomplete="username" required />
+        </label>
+        <label>Passwort
+          <input type="password" id="regPass" autocomplete="new-password" required />
+        </label>
+        <button class="secondary full" type="submit">Benutzer anlegen</button>
+      </form>
+      <p class="hint">Passwörter werden gehasht, alle App-Daten werden verschlüsselt in der IndexedDB gespeichert.</p>
+    </div>
+  </section>
+
+  <header class="app-header hidden" id="appHeader">
+    <div class="header-row">
+      <h3 id="appTitle">Mündliche Noten der Klasse —</h3>
+      <div class="header-actions">
+        <span id="todayDisplay" class="today"></span>
+        <button id="themeToggle" class="secondary small" aria-label="Design umschalten">☀︎/🌙</button>
+        <button id="logoutBtn" class="secondary small" aria-label="Abmelden">Abmelden</button>
+      </div>
+    </div>
+    <nav class="tabs">
+      <!-- Tab 1 -->
+      <button class="tab-btn" data-view="#view-erfassen" aria-selected="true">Erfassen</button>
+      <!-- Tab 2 -->
+      <button class="tab-btn" data-view="#view-uebersicht">Übersicht</button>
+      <!-- Tab 3 -->
+      <button class="tab-btn" data-view="#view-sitzplan">Sitzplan</button>
+      <!-- Tab 4 -->
+      <button class="tab-btn" data-view="#view-verwaltung">Verwaltung</button>
+    </nav>
+  </header>
+
+  <main class="hidden" id="appMain">
+    <!-- Erfassen (Tab 1) -->
+    <section id="view-erfassen" class="view active">
+      <div class="toolbar toolbar-compact">
+        <label>Klasse
+          <select id="classSelectRecord"></select>
+        </label>
+        <label>von
+          <input type="date" id="dateFrom" />
+        </label>
+        <label>bis
+          <input type="date" id="dateTo" />
+        </label>
+        <div class="quick-semester">
+          <button id="btnH1" class="secondary sem-btn">1. Halbjahr</button>
+          <button id="btnH2" class="secondary sem-btn">2. Halbjahr</button>
+        </div>
+        <label>Ansicht
+          <select id="sortMode">
+            <option value="lastname">Nachname A–Z</option>
+            <option value="firstname">Vorname A–Z</option>
+            <option value="seating">Sitzplan</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="studentList" class="cards"></div>
+      <p id="hintNoClass" class="hint hidden">Noch keine Klasse vorhanden. Bitte unter „Verwaltung“ eine Klasse anlegen.</p>
+    </section>
+
+    <!-- Übersicht (Tab 2) -->
+    <section id="view-uebersicht" class="view">
+      <div class="toolbar toolbar-compact">
+        <label>Klasse
+          <select id="classSelectOverview"></select>
+        </label>
+        <label>Schüler (optional)
+          <select id="studentSelectOverview">
+            <option value="">— alle —</option>
+          </select>
+        </label>
+        <label>von
+          <input type="date" id="overviewFrom" />
+        </label>
+        <label>bis
+          <input type="date" id="overviewTo" />
+        </label>
+        <div class="quick-semester">
+          <button id="btnH1Overview" class="secondary sem-btn">1. Halbjahr</button>
+          <button id="btnH2Overview" class="secondary sem-btn">2. Halbjahr</button>
+        </div>
+      </div>
+
+      <div id="overviewHighlight" class="ovl-highlight hidden"></div>
+      <div id="overviewStats" class="stats"></div>
+
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Klasse</th>
+              <th>Schüler</th>
+              <th>Symbol</th>
+              <th>Wert</th>
+            </tr>
+          </thead>
+          <tbody id="overviewTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sitzplan (Tab 3) -->
+    <section id="view-sitzplan" class="view">
+      <div class="toolbar toolbar-compact toolbar-seating">
+        <div class="seating-fields">
+          <label>Klasse
+            <select id="classSelectSeating"></select>
+          </label>
+          <label>Raumname
+            <input type="text" id="roomNameInput" placeholder="z. B. R203" />
+          </label>
+          <label>Vorlage
+            <select id="seatingPreset">
+              <option value="free">Freies Raster</option>
+              <option value="rows">Reihen</option>
+              <option value="u">U‑Form</option>
+            </select>
+          </label>
+          <label>Reihen
+            <input type="number" id="seatingRows" min="1" max="20" value="5" />
+          </label>
+          <label>Spalten
+            <input type="number" id="seatingCols" min="1" max="20" value="6" />
+          </label>
+          <label>Gänge nach Spalte
+            <input type="text" id="seatingAisles" placeholder="z. B. 2,4" />
+          </label>
+        </div>
+        <div class="seating-actions">
+          <button id="btnBuildGrid" class="primary">Raster aktualisieren</button>
+          <button id="btnClearSeating" class="danger">Alle Positionen leeren</button>
+          <button id="btnExportPDFSeating" class="secondary">Sitzplan als PDF</button>
+        </div>
+      </div>
+
+      <div class="seating-wrap">
+        <div class="seating-left">
+          <h4>Palette</h4>
+          <div id="seatingPalette" class="palette"></div>
+        </div>
+        <div class="seating-right">
+          <h4>Raster</h4>
+          <div id="seatingGrid" class="grid-seating" aria-label="Sitzplan"></div>
+          <p class="hint">Palette: Schüler antippen, dann Zelle tippen, um zu platzieren. Belegte Zelle erneut tippen, um zu leeren.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Verwaltung (Tab 4) -->
+    <section id="view-verwaltung" class="view">
+      <h4>Schuljahres-Einstellungen (global)</h4>
+      <form id="formGlobalYear" class="card">
+        <div class="grid grid-year">
+          <label>Schuljahresbeginn
+            <input type="date" id="globalYearStart" required />
+          </label>
+          <label>Beginn 2. Halbjahr
+            <input type="date" id="globalH2Start" required />
+          </label>
+          <label>Schuljahresende
+            <input type="date" id="globalYearEnd" required />
+          </label>
+          <div class="actions actions-inline">
+            <button type="submit" class="primary">Für alle Klassen übernehmen</button>
+          </div>
+        </div>
+        <p class="hint">Gilt sofort für alle Klassen und wird beim Anlegen vorausgefüllt.</p>
+      </form>
+
+      <h4>Klasse anlegen</h4>
+      <form id="formClass" class="card">
+        <div class="grid grid-class">
+          <label>Klassenname
+            <input type="text" id="className" required placeholder="z. B. 5a" />
+          </label>
+          <label>Fach
+            <input type="text" id="classSubject" required placeholder="z. B. Mathematik" />
+          </label>
+          <label>Klassenlehrkraft (optional)
+            <input type="text" id="classTeacher" placeholder="z. B. Frau Müller" />
+          </label>
+          <label>Schuljahresbeginn
+            <input type="date" id="yearStart" required />
+          </label>
+          <label>Beginn 2. Halbjahr
+            <input type="date" id="h2Start" required />
+          </label>
+          <label>Schuljahresende
+            <input type="date" id="yearEnd" required />
+          </label>
+        </div>
+
+        <div class="row-students">
+          <label class="studentlist">Schülerliste (ein Name pro Zeile)
+            <textarea id="studentNames" rows="6" placeholder="Max Mustermann
+Erika Muster
+..."></textarea>
+          </label>
+          <div class="side-actions">
+            <input type="file" id="csvImportCreate" accept=".csv,text/csv" class="hidden" />
+            <button type="button" id="btnCsvImportCreate" class="secondary">CSV importieren</button>
+            <button type="submit" class="primary">Klasse speichern</button>
+            <button type="reset" class="secondary">Zurücksetzen</button>
+          </div>
+        </div>
+      </form>
+
+      <h4>Bestehende Klassen</h4>
+      <div id="classList" class="list"></div>
+    </section>
+  </main>
+
+  <!-- Kontext-Popover -->
+  <div id="gradePopover" class="popover hidden" role="dialog" aria-modal="true">
+    <div class="popover-content">
+      <div id="popoverStudent" class="popover-title">Bewertung</div>
+      <div class="popover-grid">
+        <button data-symbol="+++" class="grade-btn top">+++</button>
+        <button data-symbol="++" class="grade-btn strong">++</button>
+        <button data-symbol="+" class="grade-btn good">+</button>
+        <button data-symbol="o" class="grade-btn neutral">o</button>
+        <button data-symbol="−" class="grade-btn weak">−</button>
+        <button data-symbol="−−" class="grade-btn poor">−−</button>
+      </div>
+      <button id="popoverCancel" class="secondary full">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
 </body>
 </html>
