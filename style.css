@@ -1,0 +1,255 @@
+:root{
+  --primary:#008866;
+  --primary-600:#007457;
+  --secondary:#004433;
+
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --ring: rgba(0,136,102,.25);
+  --border:#e5e7eb;
+
+  --danger-bg:#fee2e2; --danger-border:#fecaca; --danger-text:#991b1b;
+  --secondary-bg:#e6fff6; --secondary-border:#bdecdc; --secondary-text:#0a4d3d;
+
+  --neutral-bg:#eef1f4; /* helles Grau für Ø≈4 oder keine Einträge */
+  --aisle:32px; /* Vorgabe: Gänge/Zeilenabstand stets 32px */
+  --base-gap:8px; /* Standardabstand zwischen normalen Spalten */
+}
+[data-theme="dark"]{
+  --bg:#0f1216;
+  --card:#171a20;
+  --text:#e5e7eb;
+  --muted:#9aa3af;
+  --border:#2a2f38;
+  --ring: rgba(0,136,102,.35);
+
+  --danger-bg:#3a1212; --danger-border:#5b1b1b; --danger-text:#f9b1b1;
+  --secondary-bg:#0f2a25; --secondary-border:#1b4a40; --secondary-text:#a6f2da;
+
+  --neutral-bg:#20252c;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif}
+h3,h4{margin:0 0 .5rem 0}
+p{margin:.25rem 0}
+
+/* Auth */
+.auth-view{display:grid; place-items:center; min-height:100vh; padding:1rem}
+.auth-card{max-width:420px; width:100%; background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:1rem}
+.auth-forms{display:grid; gap:.5rem; margin:.5rem 0}
+.inline{display:flex; align-items:center; gap:.5rem}
+.divider{display:flex; align-items:center; gap:.5rem; margin:.75rem 0; color:var(--muted)}
+.divider::before,.divider::after{content:""; flex:1; height:1px; background:var(--border)}
+
+.app-header{
+  position:sticky; top:0; z-index:10;
+  background:var(--card); border-bottom:1px solid var(--border);
+  padding:.75rem 1rem;
+}
+.hidden{display:none}
+.header-row{display:flex; align-items:center; justify-content:space-between}
+.header-actions{display:flex; gap:.5rem; align-items:center}
+.today{color:var(--muted); font-variant-numeric:tabular-nums}
+
+.tabs{display:flex; gap:.5rem; margin-top:.5rem; flex-wrap:wrap}
+.tab-btn{
+  padding:.5rem .75rem; border:1px solid var(--border); background:var(--card); border-radius:.5rem; cursor:pointer; color:var(--text);
+}
+.tab-btn[aria-selected="true"]{background:var(--primary); color:#fff; border-color:var(--primary)}
+main{padding:1rem; max-width:1300px; margin:0 auto}
+.view{display:none}
+.view.active{display:block}
+
+/* Toolbars (iPad quer: in einer Zeile, Buttons auf Höhe der Datumsfelder) */
+.toolbar{
+  display:flex; gap:1rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem;
+}
+@media (min-width:1024px){
+  .toolbar{ flex-wrap:nowrap }
+}
+.toolbar-compact label, .toolbar-compact .quick-semester{margin-bottom:0}
+.quick-semester{display:flex; gap:.5rem; align-items:center}
+.quick-semester .sem-btn{height:40px; padding:.35rem .8rem}
+
+/* Sitzplan-Toolbar: Felder in einer Zeile; Buttons darunter in einer Zeile */
+.toolbar-seating{
+  display:flex; flex-direction:column; gap:.75rem; align-items:stretch;
+}
+.seating-fields{
+  display:flex; gap:1rem; flex-wrap:wrap; align-items:end;
+}
+@media (min-width:1024px){
+  .seating-fields{ flex-wrap:nowrap }
+}
+.seating-actions{
+  display:flex; gap:.5rem; flex-wrap:nowrap; align-items:center;
+}
+
+/* Form Felder/Buttons allgemein */
+label{display:flex; flex-direction:column; gap:.25rem; font-size:.95rem}
+input[type="text"], textarea, select, input[type="date"], input[type="number"], input[type="password"]{
+  padding:.6rem .7rem; border:1px solid var(--border); border-radius:.5rem; background:var(--card); color:var(--text); min-width:12rem;
+}
+input:focus, textarea:focus, select:focus{outline:none; border-color:var(--primary); box-shadow:0 0 0 4px var(--ring)}
+.primary{background:var(--primary); color:#fff; border:none; padding:.7rem 1rem; border-radius:.5rem; cursor:pointer; white-space:nowrap}
+.primary:active{filter:brightness(.95)}
+.secondary{
+  background:#ffffff; color:var(--secondary);
+  border:1px solid var(--secondary); padding:.6rem .9rem; border-radius:.5rem; cursor:pointer; white-space:nowrap
+}
+.danger{background:var(--danger-bg); color:var(--danger-text); border:1px solid var(--danger-border); padding:.6rem .9rem; border-radius:.5rem; cursor:pointer; white-space:nowrap}
+.small{padding:.35rem .5rem; font-size:.9rem}
+.full{width:100%}
+.card{background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:1rem}
+.grid{display:grid; gap:1rem}
+
+/* Verwaltung – iPad-optimierte Grids */
+.grid-year{ grid-template-columns: repeat(3, minmax(180px,1fr)) auto; align-items:end }
+.grid-class{ grid-template-columns: repeat(6, minmax(150px,1fr)); align-items:end }
+@media (max-width:1023px){
+  .grid-year{ grid-template-columns: 1fr 1fr; }
+  .grid-class{ grid-template-columns: 1fr 1fr 1fr; }
+}
+.actions{display:flex; gap:.5rem; flex-wrap:wrap}
+.actions-inline{justify-content:flex-start}
+
+/* Hinweise */
+.hint{color:var(--muted); margin-top:.5rem}
+
+/* Klasse anlegen: Schülerliste neben Buttons */
+.row-students{display:grid; grid-template-columns: 1fr auto; gap:.1rem 1rem; align-items:start; margin-top:1rem}
+.row-students .studentlist{width:100%}
+.row-students .side-actions{display:grid; gap:.5rem; align-content:start}
+@media (max-width:800px){
+  .row-students{grid-template-columns:1fr}
+}
+
+/* Erfassen – Kartenansicht */
+.cards{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:.75rem}
+.student-card{
+  background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:1rem;
+  display:flex; justify-content:space-between; align-items:center; gap:.5rem;
+  min-height:78px; cursor:pointer; touch-action:manipulation;
+}
+.student-name{font-weight:800}
+.avg{font-weight:800; font-size:1.05rem}
+.avg-num{color:var(--muted); font-variant-numeric:tabular-nums; font-size:.9rem; margin-left:.35rem}
+
+/* Durchschnitt-Farbcode (alle Ansichten) */
+.grade-a{background:#e8fff4} /* ~1-2 sehr gut */
+.grade-b{background:#f0fff8} /* ~2-3 gut */
+.grade-c{background:#f7fbff} /* ~3-<4 befriedigend */
+.grade-d{background:#fff7ed} /* ~4-5 schwach */
+.grade-e{background:#fef2f2} /* ~5-6 mangelhaft/ungenügend */
+.grade-neutral{background:var(--neutral-bg)} /* Ø≈4 oder keine Einträge */
+
+/* Sitzplan – Editor */
+.seating-wrap{display:grid; grid-template-columns:300px 1fr; gap:1rem}
+@media (max-width:1000px){ .seating-wrap{grid-template-columns:1fr} }
+.palette{display:grid; gap:.5rem; background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:.75rem; max-height:60vh; overflow:auto}
+.palette .chip{
+  padding:.5rem .6rem; border:1px solid var(--border); border-radius:.5rem; background:var(--card); cursor:pointer; color:var(--text);
+}
+.palette .chip.selected{outline:3px solid var(--ring); border-color:var(--primary)}
+.palette .chip.placed{background:var(--secondary-bg); border-color:var(--secondary-border)}
+
+/* Editor-Raster */
+.grid-seating{
+  --cell:64px;
+  display:grid; gap:var(--base-gap); background:transparent;
+  width:100%; height:calc(100vh - 320px);
+}
+.grid-seating .cell{
+  width:var(--cell); height:var(--cell); display:flex; align-items:center; justify-content:center;
+  border:1px dashed var(--border); border-radius:.35rem; background:var(--card); color:var(--text);
+  user-select:none; touch-action:manipulation; cursor:pointer; text-align:center; padding:.25rem;
+}
+.grid-seating .cell.disabled{background:repeating-linear-gradient(45deg, #00000008, #00000008 6px, transparent 6px, transparent 12px); cursor:not-allowed; opacity:.6}
+
+/* Erfassen – Sitzplananzeige (maximale Flächennutzung) */
+.capture-seating{
+  --cell:80px;
+  display:grid; gap:var(--base-gap); width:100%; height:calc(100vh - 240px);
+}
+.cap-cell{
+  width:var(--cell); height:var(--cell);
+  border:1px dashed var(--border); border-radius:.35rem; background:var(--card); color:var(--text);
+  display:flex; align-items:center; justify-content:center; padding:.25rem; box-sizing:border-box;
+}
+.cap-disabled{background:repeating-linear-gradient(45deg, #00000008, #00000008 6px, transparent 6px, transparent 12px)}
+.cap-occupied{}
+.cap-btn{
+  all:unset; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; cursor:pointer;
+  text-align:center; padding:.3rem; border-radius:.35rem; font-weight:700;
+}
+.cap-btn .avg{font-size:1.05rem}
+.cap-btn .avg-num{color:var(--muted); font-size:.85rem}
+
+/* Übersicht – Hervorhebung */
+.ovl-highlight{background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:.6rem .8rem; margin-bottom:.5rem; font-weight:800; font-size:1.1rem}
+.ovl-highlight .note{margin-left:.5rem}
+
+/* Tabellen/Listen/Stats */
+.list{display:grid; gap:.75rem}
+.list-item{background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:.75rem}
+.list-row{display:flex; justify-content:space-between; align-items:center; gap:.5rem; flex-wrap:wrap}
+.badge{background:var(--secondary-bg); color:var(--secondary-text); border:1px solid var(--secondary-border); padding:.2rem .5rem; border-radius:.5rem; font-size:.8rem}
+.table-wrap{overflow:auto; background:var(--card); border:1px solid var(--border); border-radius:.75rem}
+.table{width:100%; border-collapse:separate; border-spacing:0}
+.table th,.table td{padding:.6rem .75rem; border-bottom:1px solid #1f293708; text-align:left; white-space:nowrap}
+.table td.stu, .table td.val{font-weight:700; background: #00000005}
+[data-theme="dark"] .table td.stu, [data-theme="dark"] .table td.val{background:#ffffff0a}
+.stats{margin:.5rem 0 1rem 0; color:var(--text)}
+
+/* Semester-Buttons aktiv */
+.sem-btn.sem-active{ background:var(--primary); color:#fff; border-color:var(--primary); }
+
+/* Kontext-Popover (Bewertung) */
+.popover{
+  position:fixed; inset:0; display:flex; align-items:flex-start; justify-content:flex-start;
+  background:transparent; z-index:1000;
+}
+.popover.hidden{display:none}
+.popover-content{
+  background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:.75rem;
+  padding:.75rem; min-width:320px; box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.popover-title{font-weight:700; margin-bottom:.5rem}
+.popover-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin-bottom:.5rem}
+.grade-btn{
+  padding:1.05rem .25rem; font-size:1.2rem; font-weight:800; border-radius:.5rem; border:1px solid var(--border); background:var(--card); min-height:68px; color:var(--text);
+}
+.grade-btn.top{background:#ddfff2; border-color:#bdecdc}
+.grade-btn.strong{background:#e6fff6; border-color:#bdecdc}
+.grade-btn.good{background:#f0fff9; border-color:#c7f2e7}
+.grade-btn.neutral{background:#f8fafc}
+.grade-btn.weak{background:#fff7ed; border-color:#fed7aa}
+.grade-btn.poor{background:#fef2f2; border-color:#fecaca}
+
+/* Buttons */
+button:disabled{opacity:.6; cursor:not-allowed}
+
+/* Toast */
+.toast{
+  position:fixed; left:50%; bottom:1rem; transform:translateX(-50%); background:#111827; color:#fff;
+  padding:.6rem .9rem; border-radius:.5rem; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;
+  max-width:90vw; text-align:center; z-index:1200;
+}
+.toast.show{opacity:1; transform:translateX(-50%) translateY(-6px)}
+
+/* Druck/PDF – Sitzplan: gleiche Abstände wie Web (px), gleiche Tischgröße */
+@media print{
+  body{background:#fff}
+  .print-grid{display:grid; gap:8px; row-gap:32px}
+  .print-cell{
+    border:1px solid #333; border-radius:4px; height:28mm;
+    display:flex; align-items:center; justify-content:center;
+    font-size:12px; padding:4px; text-align:center; word-break:break-word;
+  }
+  .print-cell.disabled{background:repeating-linear-gradient(45deg, #00000010, #00000010 6px,transparent 6px,transparent 12px)}
+  .print-table{width:100%; border-collapse:collapse}
+  .print-table th,.print-table td{border:1px solid #333; padding:4px 6px; font-size:11px}
+}
