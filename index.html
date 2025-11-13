@@ -12,7 +12,7 @@
 </head>
 <body data-theme="light">
   <!-- Login / Registrierung -->
-  <section id="view-auth" class="auth-view active">
+  <section id="view-auth" class="auth-view active" aria-label="Anmeldung">
     <div class="auth-card">
       <h3>Anmeldung</h3>
       <form id="loginForm" class="auth-forms" autocomplete="on">
@@ -48,26 +48,22 @@
     <div class="header-row">
       <h3 id="appTitle">Mündliche Noten der Klasse —</h3>
       <div class="header-actions">
-        <span id="todayDisplay" class="today"></span>
+        <span id="todayDisplay" class="today" aria-label="Heutiges Datum"></span>
         <button id="themeToggle" class="secondary small" aria-label="Design umschalten">☀︎/🌙</button>
         <button id="logoutBtn" class="secondary small" aria-label="Abmelden">Abmelden</button>
       </div>
     </div>
-    <nav class="tabs">
-      <!-- Tab 1 -->
-      <button class="tab-btn" data-view="#view-erfassen" aria-selected="true">Erfassen</button>
-      <!-- Tab 2 -->
-      <button class="tab-btn" data-view="#view-uebersicht">Übersicht</button>
-      <!-- Tab 3 -->
-      <button class="tab-btn" data-view="#view-sitzplan">Sitzplan</button>
-      <!-- Tab 4 -->
-      <button class="tab-btn" data-view="#view-verwaltung">Verwaltung</button>
+    <nav class="tabs" role="tablist" aria-label="Hauptnavigation">
+      <button class="tab-btn" data-view="#view-erfassen" aria-selected="true" role="tab">Erfassen</button>
+      <button class="tab-btn" data-view="#view-uebersicht" role="tab">Übersicht</button>
+      <button class="tab-btn" data-view="#view-sitzplan" role="tab">Sitzplan</button>
+      <button class="tab-btn" data-view="#view-verwaltung" role="tab">Verwaltung</button>
     </nav>
   </header>
 
   <main class="hidden" id="appMain">
     <!-- Erfassen (Tab 1) -->
-    <section id="view-erfassen" class="view active">
+    <section id="view-erfassen" class="view active" role="tabpanel" aria-labelledby="tab-erfassen">
       <div class="toolbar toolbar-compact">
         <label>Klasse
           <select id="classSelectRecord"></select>
@@ -91,12 +87,12 @@
         </label>
       </div>
 
-      <div id="studentList" class="cards"></div>
+      <div id="studentList" class="cards" aria-live="polite"></div>
       <p id="hintNoClass" class="hint hidden">Noch keine Klasse vorhanden. Bitte unter „Verwaltung“ eine Klasse anlegen.</p>
     </section>
 
     <!-- Übersicht (Tab 2) -->
-    <section id="view-uebersicht" class="view">
+    <section id="view-uebersicht" class="view" role="tabpanel" aria-labelledby="tab-uebersicht">
       <div class="toolbar toolbar-compact">
         <label>Klasse
           <select id="classSelectOverview"></select>
@@ -138,7 +134,7 @@
     </section>
 
     <!-- Sitzplan (Tab 3) -->
-    <section id="view-sitzplan" class="view">
+    <section id="view-sitzplan" class="view" role="tabpanel" aria-labelledby="tab-sitzplan">
       <div class="toolbar toolbar-compact toolbar-seating">
         <div class="seating-fields">
           <label>Klasse
@@ -185,7 +181,7 @@
     </section>
 
     <!-- Verwaltung (Tab 4) -->
-    <section id="view-verwaltung" class="view">
+    <section id="view-verwaltung" class="view" role="tabpanel" aria-labelledby="tab-verwaltung">
       <h4>Schuljahres-Einstellungen (global)</h4>
       <form id="formGlobalYear" class="card">
         <div class="grid grid-year">
@@ -248,8 +244,8 @@ Erika Muster
     </section>
   </main>
 
-  <!-- Kontext-Popover -->
-  <div id="gradePopover" class="popover hidden" role="dialog" aria-modal="true">
+  <!-- Kontext-Popover (große Tippziele) -->
+  <div id="gradePopover" class="popover hidden" role="dialog" aria-modal="true" aria-label="Bewertung wählen">
     <div class="popover-content">
       <div id="popoverStudent" class="popover-title">Bewertung</div>
       <div class="popover-grid">
