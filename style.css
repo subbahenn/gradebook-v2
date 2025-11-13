@@ -75,18 +75,10 @@ main{padding:1rem; max-width:1300px; margin:0 auto}
 .quick-semester .sem-btn{height:40px; padding:.35rem .8rem}
 
 /* Sitzplan-Toolbar: Felder in einer Zeile; Buttons darunter in einer Zeile */
-.toolbar-seating{
-  display:flex; flex-direction:column; gap:.75rem; align-items:stretch;
-}
-.seating-fields{
-  display:flex; gap:1rem; flex-wrap:wrap; align-items:end;
-}
-@media (min-width:1024px){
-  .seating-fields{ flex-wrap:nowrap }
-}
-.seating-actions{
-  display:flex; gap:.5rem; flex-wrap:nowrap; align-items:center;
-}
+.toolbar-seating{ display:flex; flex-direction:column; gap:.75rem; align-items:stretch }
+.seating-fields{ display:flex; gap:1rem; flex-wrap:wrap; align-items:end }
+@media (min-width:1024px){ .seating-fields{ flex-wrap:nowrap } }
+.seating-actions{ display:flex; gap:.5rem; flex-wrap:nowrap; align-items:center }
 
 /* Form Felder/Buttons allgemein */
 label{display:flex; flex-direction:column; gap:.25rem; font-size:.95rem}
@@ -123,30 +115,28 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--prima
 .row-students{display:grid; grid-template-columns: 1fr auto; gap:.1rem 1rem; align-items:start; margin-top:1rem}
 .row-students .studentlist{width:100%}
 .row-students .side-actions{display:grid; gap:.5rem; align-content:start}
-@media (max-width:800px){
-  .row-students{grid-template-columns:1fr}
-}
+@media (max-width:800px){ .row-students{grid-template-columns:1fr} }
 
 /* Erfassen – Kartenansicht */
 .cards{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:.75rem}
 .student-card{
   background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:1rem;
   display:flex; justify-content:space-between; align-items:center; gap:.5rem;
-  min-height:78px; cursor:pointer; touch-action:manipulation;
+  min-height:80px; cursor:pointer; touch-action:manipulation;
 }
 .student-name{font-weight:800}
 .avg{font-weight:800; font-size:1.05rem}
 .avg-num{color:var(--muted); font-variant-numeric:tabular-nums; font-size:.9rem; margin-left:.35rem}
 
 /* Durchschnitt-Farbcode (alle Ansichten) */
-.grade-a{background:#e8fff4} /* ~1-2 sehr gut */
-.grade-b{background:#f0fff8} /* ~2-3 gut */
-.grade-c{background:#f7fbff} /* ~3-<4 befriedigend */
-.grade-d{background:#fff7ed} /* ~4-5 schwach */
-.grade-e{background:#fef2f2} /* ~5-6 mangelhaft/ungenügend */
-.grade-neutral{background:var(--neutral-bg)} /* Ø≈4 oder keine Einträge */
+.grade-a{background:#e8fff4}
+.grade-b{background:#f0fff8}
+.grade-c{background:#f7fbff}
+.grade-d{background:#fff7ed}
+.grade-e{background:#fef2f2}
+.grade-neutral{background:var(--neutral-bg)}
 
-/* Sitzplan – Editor */
+/* Sitzplan – Editor & Erfassung */
 .seating-wrap{display:grid; grid-template-columns:300px 1fr; gap:1rem}
 @media (max-width:1000px){ .seating-wrap{grid-template-columns:1fr} }
 .palette{display:grid; gap:.5rem; background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:.75rem; max-height:60vh; overflow:auto}
@@ -156,7 +146,6 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--prima
 .palette .chip.selected{outline:3px solid var(--ring); border-color:var(--primary)}
 .palette .chip.placed{background:var(--secondary-bg); border-color:var(--secondary-border)}
 
-/* Editor-Raster */
 .grid-seating{
   --cell:64px;
   display:grid; gap:var(--base-gap); background:transparent;
@@ -173,6 +162,7 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--prima
 .capture-seating{
   --cell:80px;
   display:grid; gap:var(--base-gap); width:100%; height:calc(100vh - 240px);
+  row-gap:var(--aisle); /* Reihen immer 32px */
 }
 .cap-cell{
   width:var(--cell); height:var(--cell);
@@ -180,16 +170,15 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--prima
   display:flex; align-items:center; justify-content:center; padding:.25rem; box-sizing:border-box;
 }
 .cap-disabled{background:repeating-linear-gradient(45deg, #00000008, #00000008 6px, transparent 6px, transparent 12px)}
-.cap-occupied{}
 .cap-btn{
   all:unset; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; cursor:pointer;
-  text-align:center; padding:.3rem; border-radius:.35rem; font-weight:700;
+  text-align:center; padding:.35rem; border-radius:.35rem; font-weight:700;
 }
 .cap-btn .avg{font-size:1.05rem}
 .cap-btn .avg-num{color:var(--muted); font-size:.85rem}
 
 /* Übersicht – Hervorhebung */
-.ovl-highlight{background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:.6rem .8rem; margin-bottom:.5rem; font-weight:800; font-size:1.1rem}
+.ovl-highlight{background:var(--card); border:1px solid var(--border); border-radius:.75rem; padding:.6rem .8rem; margin-bottom:.5rem; font-weight:800; font-size:1.12rem}
 .ovl-highlight .note{margin-left:.5rem}
 
 /* Tabellen/Listen/Stats */
@@ -207,7 +196,7 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--prima
 /* Semester-Buttons aktiv */
 .sem-btn.sem-active{ background:var(--primary); color:#fff; border-color:var(--primary); }
 
-/* Kontext-Popover (Bewertung) */
+/* Popover (Bewertung) */
 .popover{
   position:fixed; inset:0; display:flex; align-items:flex-start; justify-content:flex-start;
   background:transparent; z-index:1000;
@@ -215,12 +204,12 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--prima
 .popover.hidden{display:none}
 .popover-content{
   background:var(--card); color:var(--text); border:1px solid var(--border); border-radius:.75rem;
-  padding:.75rem; min-width:320px; box-shadow:0 8px 24px rgba(0,0,0,.2);
+  padding:.9rem; min-width:340px; box-shadow:0 8px 24px rgba(0,0,0,.2);
 }
-.popover-title{font-weight:700; margin-bottom:.5rem}
-.popover-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; margin-bottom:.5rem}
+.popover-title{font-weight:800; margin-bottom:.6rem}
+.popover-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; margin-bottom:.6rem}
 .grade-btn{
-  padding:1.05rem .25rem; font-size:1.2rem; font-weight:800; border-radius:.5rem; border:1px solid var(--border); background:var(--card); min-height:68px; color:var(--text);
+  padding:1.1rem .3rem; font-size:1.2rem; font-weight:800; border-radius:.6rem; border:1px solid var(--border); background:var(--card); min-height:72px; color:var(--text);
 }
 .grade-btn.top{background:#ddfff2; border-color:#bdecdc}
 .grade-btn.strong{background:#e6fff6; border-color:#bdecdc}
@@ -245,7 +234,7 @@ button:disabled{opacity:.6; cursor:not-allowed}
   body{background:#fff}
   .print-grid{display:grid; gap:8px; row-gap:32px}
   .print-cell{
-    border:1px solid #333; border-radius:4px; height:28mm;
+    border:1px solid #333; border-radius:4px; height:28mm; /* gleiche Tischgröße */
     display:flex; align-items:center; justify-content:center;
     font-size:12px; padding:4px; text-align:center; word-break:break-word;
   }
